@@ -1,0 +1,57 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.so
+.Python
+*.egg-info/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+
+# --- IDE / OS ---
+.idea/
+.vscode/
+.DS_Store
+
+# --- TensorBoard / logs ---
+tb_logs/
+*.log
+
+# --- Experiment outputs (regenerable) ---
+outputs/
+inputs/
+results/
+masked_inputs/
+visualization_output/
+test_run_output/
+experiments/
+reports/
+final/
+images/
+
+# --- Datasets (large) ---
+realcell/
+RealDatas/
+open_scivis_128x128/
+open_scivis_50x50/
+mauf-snapshot-input/
+snapshot_Input/
+miss_3D/
+mauf_Input/
+results-gdrive/
+analysis_report/
+
+# --- Internal docs (do not publish) ---
+development_logs/
+dailyReport/
+run_2day_logs/
+卒論グラフ/
+
+# --- Large model / data files ---
+*.npy
+*.mat
+*.pt
+*.pth
+*.ckpt

@@ -1,0 +1,77 @@
+======================================================
+ snapshot_block_random.py  実行方法
+======================================================
+
+【概要】
+  A×A ブロック内でランダムに 50% を開口したパターンを 1 つ生成し、
+  それを画像全体にタイリングしたマスクでスナップショットを作成する。
+  ブロックサイズ A は 2 / 4 / 8 から選択可能。
+
+------------------------------------------------------
+【前提】
+  - プロジェクトルート直下に img_model.py が存在すること
+  - 入力は .npy 形式のボリュームデータ (shape: D × H × W)
+  - Python 環境に numpy, torch, Pillow, scipy が入っていること
+
+------------------------------------------------------
+【基本コマンド】
+
+  # プロジェクトルートから実行する場合
+  python my-program/create_compressed_inputs/block_random/snapshot_block_random.py \
+      -i <入力ボリューム.npy> \
+      -o <出力ディレクトリ> \
+      --block-size <2|4|8>
+
+  # スクリプトと同じディレクトリから実行する場合
+  cd my-program/create_compressed_inputs/block_random
+  python snapshot_block_random.py \
+      -i ../../../sample/input/volume.npy \
+      -o ./output_4x4 \
+      --block-size 4
+
+------------------------------------------------------
+【引数一覧】
+
+  必須:
+    -i / --input      入力ボリューム (.npy) のパス
+    -o / --output     出力ディレクトリのパス
+
+  任意:
+    --block-size      ブロックサイズ A (2, 4, 8 のいずれか)  [デフォルト: 4]
+    --seed            乱数シード (整数)                       [デフォルト: 42]
+    --device          使用デバイス (cuda / cpu)               [デフォルト: cuda]
+
+------------------------------------------------------
+【使用例】
+
+  # 2×2 ブロック、シード=0
+  python snapshot_block_random.py -i vol.npy -o out_2x2 --block-size 2 --seed 0
+
+  # 4×4 ブロック、CPU で実行
+  python snapshot_block_random.py -i vol.npy -o out_4x4 --block-size 4 --device cpu
+
+  # 8×8 ブロック、デフォルトシード
+  python snapshot_block_random.py -i vol.npy -o out_8x8 --block-size 8
+
+------------------------------------------------------
+【出力ファイル】
+
+  <出力ディレクトリ>/
+    snapshot.png          圧縮画像（スナップショット）
+    masks.mat             DIP 学習用マスク (変数名: ExpPtn, shape: H×W×N)
+    mapping.json          メタデータ（ブロックサイズ・開口率・シード等）
+    masks/
+      mask_slice_00.png   各フレームのマスクパターン画像
+      mask_slice_01.png
+      ...
+
+------------------------------------------------------
+【マスクの仕様まとめ】
+
+  - ブロックサイズ A を選ぶと、A×A = B ピクセルのパターンが生成される
+  - 各フレームで B/2 個（= 50%）をランダムに開口
+  - そのパターンを np.tile で画像全体に繰り返す
+    → 全ブロックで同じパターンが使われる
+  - フレーム間はそれぞれ独立したランダムパターン
+
+======================================================
